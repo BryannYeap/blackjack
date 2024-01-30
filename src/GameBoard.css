@@ -1,0 +1,16 @@
+.game-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hands {
+  margin: 0 5em 0 5em;
+}
+
+.player-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2em;
+}
