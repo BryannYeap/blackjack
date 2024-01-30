@@ -9,7 +9,7 @@ Card.propTypes = {
 
 function Card({ suit, value, isFaceDown = false }) {
   return (
-    <div className={`card ${isFaceDown && "card-back"}`}>
+    <div className={`card ${isFaceDown && "card-back"} ${suit}`}>
       {!isFaceDown && <div className="card-value">{value}</div>}
       {!isFaceDown && <div className="card-suit">{suit}</div>}
     </div>
