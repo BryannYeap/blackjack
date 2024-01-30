@@ -20,7 +20,7 @@
 }
 
 .card-back {
-  background-image: url("./public/card_back.png");
+  background-image: url("/images/card_back.png");
   background-size: cover;
   background-position: center;
 }
