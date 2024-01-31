@@ -114,11 +114,11 @@ const GameStateContextProvider = ({ children }) => {
 
   const handleDraw = () => {
     if (playerHandValue === 21 && playerCards.length === 2) {
-      if (dealerhandValue !== 21 || dealerCards.length !== 2) {
+      if (dealerCards.length !== 2) {
         handlePlayerWins();
       }
     } else if (dealerhandValue === 21 && dealerCards.length === 2) {
-      if (playerHandValue !== 21 || playerCards.length !== 2) {
+      if (playerCards.length !== 2) {
         handleDealerWins();
       }
     }
