@@ -90,12 +90,36 @@ const GameStateContextProvider = ({ children }) => {
     }, 3000);
   };
 
-  const handleDealerWins = (points) => {
-    setDealerPoints(dealerPoints + points);
+  const handleDealerWins = () => {
+    if (dealerhandValue === 21 && dealerCards.length === 2) {
+      setDealerPoints(dealerPoints + 15);
+    } else {
+      setDealerPoints(dealerPoints + 10);
+    }
+
+    setPlayerPoints(playerPoints - 10);
   };
 
-  const handlePlayerWins = (points) => {
-    setPlayerPoints(playerPoints + points);
+  const handlePlayerWins = () => {
+    if (playerHandValue === 21 && playerCards.length === 2) {
+      setPlayerPoints(playerPoints + 15);
+    } else {
+      setPlayerPoints(playerPoints + 10);
+    }
+
+    setDealerPoints(dealerPoints - 10);
+  };
+
+  const handleDraw = () => {
+    if (playerHandValue === 21 && playerCards.length === 2) {
+      if (dealerhandValue !== 21 || dealerCards.length !== 2) {
+        handlePlayerWins();
+      }
+    } else if (dealerhandValue === 21 && dealerCards.length === 2) {
+      if (playerHandValue !== 21 || playerCards.length !== 2) {
+        handleDealerWins();
+      }
+    }
   };
 
   const handlePlayerHit = () => {
@@ -124,31 +148,20 @@ const GameStateContextProvider = ({ children }) => {
   };
 
   const handleEndRound = () => {
-    setIsRoundStarted(false);
-    setIsDisabled(false);
-
     if (playerHandValue > 21) {
-      // Player Busts
-      handleDealerWins(10);
+      handleDealerWins();
     } else {
-      if (dealerhandValue == playerHandValue) {
-        // PUSH: DO NOTHING
-      } else if (dealerhandValue > 21 || playerHandValue > dealerhandValue) {
-        // Dealer Loses
-        if (playerHandValue === 21 && playerCards.length === 2) {
-          handlePlayerWins(15);
-        } else {
-          handlePlayerWins(10);
-        }
-      } else {
-        // Dealer Wins
-        if (dealerhandValue === 21 && dealerCards.length === 2) {
-          handleDealerWins(15);
-        } else {
-          handleDealerWins(10);
-        }
+      if (dealerhandValue > 21 || playerHandValue > dealerhandValue) {
+        handlePlayerWins();
+      } else if (dealerhandValue > playerHandValue) {
+        handleDealerWins();
+      } else if (dealerhandValue === playerHandValue) {
+        handleDraw();
       }
     }
+
+    setIsDisabled(false);
+    setIsRoundStarted(false);
   };
 
   const value = useMemo(
@@ -170,6 +183,9 @@ const GameStateContextProvider = ({ children }) => {
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
+      isRoundStarted,
+      isDisabled,
+      isDealersTurn,
       deck,
       dealerCards,
       playerCards,
