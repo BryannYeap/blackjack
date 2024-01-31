@@ -51,7 +51,7 @@ const GameStateContextProvider = ({ children }) => {
     setPlayerHandValue(calculateHandValue(playerCards));
     setDealerhandValue(calculateHandValue(dealerCards));
 
-    if (isRoundStarted && playerHandValue > 21) {
+    if (isRoundStarted && playerHandValue >= 21 && !isDisabled) {
       handleDealersTurn();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,7 +60,7 @@ const GameStateContextProvider = ({ children }) => {
   // Handles Dealer's Turn
   useEffect(() => {
     if (isRoundStarted && isDealersTurn) {
-      if (playerHandValue > 21 || dealerhandValue >= 17) {
+      if (playerHandValue >= 21 || dealerhandValue >= 17) {
         handleEndRound();
       } else if (dealerhandValue < 17) {
         setTimeout(() => {
