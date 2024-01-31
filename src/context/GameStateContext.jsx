@@ -1,5 +1,6 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import { GET_SHUFFLED_DECK, VALUES } from "../utils/constants";
+import { shuffleArray } from "../utils/array";
 
 export const GameStateContext = createContext({});
 
@@ -13,6 +14,7 @@ const GameStateContextProvider = ({ children }) => {
   const [dealerCards, setDealerCards] = useState([]);
   const [playerCards, setPlayerCards] = useState([]);
   const [deck, setDeck] = useState(GET_SHUFFLED_DECK());
+  const [discardDeck, setDiscardDeck] = useState([]);
   const [playerHandValue, setPlayerHandValue] = useState(0);
   const [dealerhandValue, setDealerhandValue] = useState(0);
 
@@ -74,6 +76,7 @@ const GameStateContextProvider = ({ children }) => {
   }, [isDealersTurn, dealerhandValue, isRoundStarted]);
 
   const handleStartRound = () => {
+    setDiscardDeck([...discardDeck, ...playerCards, ...dealerCards]);
     setPlayerCards([]);
     setDealerCards([]);
     setPlayerHandValue(0);
@@ -90,6 +93,33 @@ const GameStateContextProvider = ({ children }) => {
       handleDealerHit(true);
       setIsDisabled(false);
     }, 3000);
+  };
+
+  // Reshuffle the discard deck and add in when deck has less than 15 cards
+  useEffect(() => {
+    if (deck.length < 15) {
+      setDiscardDeck((prev) => {
+        shuffleArray(prev);
+        setDeck((prevDeck) => [...prevDeck, ...discardDeck]);
+        return [];
+      });
+    }
+  }, [deck, discardDeck]);
+
+  const handlePlayerHit = () => {
+    setDeck((prevDeck) => {
+      const newCard = prevDeck[0];
+      setPlayerCards((prev) => [...prev, newCard]);
+      return [...prevDeck.slice(1)];
+    });
+  };
+
+  const handleDealerHit = (isFaceDown) => {
+    setDeck((prevDeck) => {
+      const newCard = prevDeck[0];
+      setDealerCards((prev) => [...prev, { ...newCard, isFaceDown }]);
+      return [...prevDeck.slice(1)];
+    });
   };
 
   const handleDealerWins = () => {
@@ -122,22 +152,6 @@ const GameStateContextProvider = ({ children }) => {
         handleDealerWins();
       }
     }
-  };
-
-  const handlePlayerHit = () => {
-    setDeck((prevDeck) => {
-      const newCard = prevDeck[0];
-      setPlayerCards((prev) => [...prev, newCard]);
-      return [...prevDeck.slice(1)];
-    });
-  };
-
-  const handleDealerHit = (isFaceDown) => {
-    setDeck((prevDeck) => {
-      const newCard = prevDeck[0];
-      setDealerCards((prev) => [...prev, { ...newCard, isFaceDown }]);
-      return [...prevDeck.slice(1)];
-    });
   };
 
   const handleDealersTurn = () => {
