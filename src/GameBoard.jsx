@@ -3,66 +3,29 @@ import Button from "./components/Button";
 import Deck from "./components/Deck";
 import "./GameBoard.css";
 import useGameState from "./hooks/useGameState";
-import { useEffect, useState } from "react";
-import { VALUES } from "./utils/constants";
 
 function GameBoard() {
-  const [playerHandValue, setPlayerHandValue] = useState(0);
-  const [dealerhandValue, setDealerhandValue] = useState(0);
-
   const {
     isRoundStarted,
     isDisabled,
+    isDealersTurn,
     dealerPoints,
     playerPoints,
     dealerCards,
     playerCards,
+    dealerhandValue,
+    playerHandValue,
     handleStartRound,
     handlePlayerHit,
-    handleDealerHit,
+    handleDealersTurn,
   } = useGameState();
-
-  const calculateHandValue = (cards) => {
-    let handValue = 0;
-    let hasAce = false;
-
-    cards.forEach((card) => {
-      const { value } = card;
-
-      switch (value) {
-        case VALUES.JACK:
-        case VALUES.QUEEN:
-        case VALUES.KING:
-          handValue += 10;
-          break;
-        case "A":
-          hasAce = true;
-          handValue += 11;
-          break;
-        default:
-          handValue += parseInt(value, 10);
-          break;
-      }
-    });
-
-    if (hasAce && handValue > 21) {
-      handValue -= 10;
-    }
-
-    return handValue;
-  };
-
-  useEffect(() => {
-    setPlayerHandValue(calculateHandValue(playerCards));
-    setDealerhandValue(calculateHandValue(dealerCards));
-  }, [playerCards, dealerCards]);
 
   return (
     <div className="game-container">
       <Deck />
       <div className="hands">
         <div>
-          <h2>{`Dealer's Hand: ${dealerhandValue}`}</h2>
+          <h2>{`Dealer's Hand: ${isDealersTurn ? dealerhandValue : "🙊"}`}</h2>
           <Hand cards={dealerCards} />
         </div>
         <div>
@@ -79,7 +42,7 @@ function GameBoard() {
               />
               <Button
                 text="Stay"
-                onClick={handleDealerHit}
+                onClick={handleDealersTurn}
                 isDisabled={isDisabled}
               />
             </>
@@ -90,8 +53,8 @@ function GameBoard() {
       </div>
       <div className="scoreboard">
         <h2>Scoreboard</h2>
-        <h3>{dealerPoints}</h3>
-        <h3>{playerPoints}</h3>
+        <h3>Dealer: {dealerPoints}</h3>
+        <h3>You: {playerPoints}</h3>
       </div>
     </div>
   );
