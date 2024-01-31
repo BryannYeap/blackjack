@@ -60,7 +60,9 @@ const GameStateContextProvider = ({ children }) => {
   // Handles Dealer's Turn
   useEffect(() => {
     if (isRoundStarted && isDealersTurn) {
-      if (playerHandValue >= 21 || dealerhandValue >= 17) {
+      if (playerHandValue === 21 && playerCards.length === 2) {
+        handleEndRound(); // Player has Blackjack
+      } else if (playerHandValue > 21 || dealerhandValue >= 17) {
         handleEndRound();
       } else if (dealerhandValue < 17) {
         setTimeout(() => {
