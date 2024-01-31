@@ -1,13 +1,16 @@
-import useGameState from "../hooks/useGameState";
 import Card from "./Card";
+import PropTypes from "prop-types";
 
-function Deck() {
-  const { deck } = useGameState();
+Deck.propTypes = {
+  deckSize: PropTypes.number.isRequired,
+};
+
+function Deck({ deckSize }) {
   return (
     <div>
       <h2>Deck</h2>
       <Card isFaceDown={true} />
-      <h3>{`No. of cards in deck: ${deck.length}`}</h3>
+      <h3>{`No. of cards in deck: ${deckSize}`}</h3>
     </div>
   );
 }

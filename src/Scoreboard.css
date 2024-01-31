@@ -1,0 +1,27 @@
+.scoreboard-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scoreboard-table {
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 15px;
+  text-align: center;
+}
+
+th {
+  background-color: #333;
+  color: #fff;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}

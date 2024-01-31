@@ -3,6 +3,7 @@ import Button from "./components/Button";
 import Deck from "./components/Deck";
 import "./GameBoard.css";
 import useGameState from "./hooks/useGameState";
+import Scoreboard from "./Scoreboard";
 
 function GameBoard() {
   const {
@@ -13,6 +14,7 @@ function GameBoard() {
     playerPoints,
     dealerCards,
     playerCards,
+    deck,
     dealerhandValue,
     playerHandValue,
     handleStartRound,
@@ -22,7 +24,7 @@ function GameBoard() {
 
   return (
     <div className="game-container">
-      <Deck />
+      <Deck deckSize={deck.length} />
       <div className="hands">
         <div>
           <h2>{`Dealer's Hand: ${isDealersTurn ? dealerhandValue : "🙊"}`}</h2>
@@ -51,11 +53,7 @@ function GameBoard() {
           )}
         </div>
       </div>
-      <div className="scoreboard">
-        <h2>Scoreboard</h2>
-        <h3>Dealer: {dealerPoints}</h3>
-        <h3>You: {playerPoints}</h3>
-      </div>
+      <Scoreboard dealerPoints={dealerPoints} playerPoints={playerPoints} />
     </div>
   );
 }
